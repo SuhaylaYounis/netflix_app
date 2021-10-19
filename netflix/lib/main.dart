@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
       ),
       home: AnimatedSplashScreen(
-        duration: 1700,
+        duration: 1730,
         splash:
         Image.asset(
           "images/netflix-netflix-startup.gif",
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
           height: double.infinity,
           width: double.infinity,
         ),
+
         nextScreen: HomeScreen(),
         backgroundColor: primarydarkcolor,
         splashTransition: SplashTransition.fadeTransition,

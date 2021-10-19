@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/all.dart';
 import 'package:netflix/controller/get_popular.dart';
 import 'package:netflix/controller/get_top_rated.dart';
+import 'package:netflix/screens/Discription_screens/disc_screen.dart';
 import '../../constants.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
           style: TextStyle(
             color: red,
             fontSize: 20,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -43,15 +44,15 @@ class HomeScreen extends StatelessWidget {
           Consumer(
             builder: (BuildContext context, watch, child) {
               var viewModelTopRate = watch(getdatatoprate);
-              return CarouselSlider.builder(
+              return (viewModelTopRate.listDataModel.length==0)?SizedBox(height: 0 ,): CarouselSlider.builder(
                 options: CarouselOptions(
                   autoPlay: true,
-                  aspectRatio: 2.0,
-                  viewportFraction: 0.9,
+                  aspectRatio: 1.5,
+                  viewportFraction: 0.8,
                   height: 250,
                   initialPage: 0,
                   enableInfiniteScroll: false,
-                  reverse: false,
+                  reverse: true,
                   autoPlayInterval: Duration(seconds: 3),
                   autoPlayAnimationDuration: Duration(milliseconds: 800),
                   autoPlayCurve: Curves.fastOutSlowIn,
@@ -64,14 +65,15 @@ class HomeScreen extends StatelessWidget {
                     child: Image.network(
                         image_url +
                             viewModelTopRate.listDataModel[index].poster_path,
-                        fit: BoxFit.cover),
+                        fit: BoxFit.fill),
                     footer: Container(
-                      color: Colors.red.withOpacity(0.5),
+                      color: Colors.red.withOpacity(0.8),
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(5.0),
                       child: Text(
                         viewModelTopRate.listDataModel[index].title.toString(),
-                        style: TextStyle(
+                          textAlign:TextAlign.center,
+                        style: TextStyle(color: Colors.white,
                             fontSize: 16, fontWeight: FontWeight.w800),
                       ),
                     ),
@@ -94,18 +96,31 @@ class HomeScreen extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index){
                         return GestureDetector(
                           onTap: () {
-                            print("url");
+                              Navigator.push(context,MaterialPageRoute(builder:(BuildContext context){
+                              return DiscScreen(
+                              title: viewModelPopular.listDataModel[index]
+                                  .title, overview:viewModelPopular.listDataModel[index].overview ,
+                                vote_average: viewModelPopular.listDataModel[index].vote_average,
+                                  id:viewModelPopular.listDataModel[index].id,
+                                  poster_path:viewModelPopular.listDataModel[index].poster_path,
+
+                              );
+                              }));
+
+
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Card(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                color: black,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),side: BorderSide(color: red, width: 1), ),
                               child: Column(
+
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Image.network(image_url +
                                       viewModelPopular.listDataModel[index].poster_path,
-                                      fit: BoxFit.cover),
+                                      fit: BoxFit.contain),
                                   Container(
                                     color: black,
                                     child: Column(
@@ -115,12 +130,20 @@ class HomeScreen extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text("${viewModelPopular.listDataModel[index].title }",
-                                          style:TextStyle(color:Colors.white) ,
+                                          style:TextStyle(color:Colors.white) ,textAlign: TextAlign.center
                                           ),
                                         ),
-                                        Text("${viewModelPopular.listDataModel[index].overview}",
-                                          maxLines: 2,
-                                            style:TextStyle(color:Colors.white) ),
+                                        /*  Container(
+                                          padding: EdgeInsets.all(5),
+                                          color:black,
+                                          alignment:Alignment.center,
+
+                                         child: Text("${viewModelPopular.listDataModel[index].overview}",
+                                            maxLines: 1,
+                                              style:TextStyle(color:Colors.white),
+                                          textAlign: TextAlign.center ,
+                                          ),
+                                        ),*/
                                       ],
                                     ),
                                   )
